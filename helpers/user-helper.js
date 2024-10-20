@@ -8,6 +8,7 @@ var instance = new Razorpay({
   key_secret: "knJhy4BRKV3dVsNBDmKOFxhq",
 });
 const crypto = require("crypto");
+const { PassThrough } = require("stream");
 
 
 // Function to hash password
@@ -55,6 +56,8 @@ module.exports = {
         .collection(collection.USER_COLLECTION)
         .findOne({ Email: userData.Email });
       if (user) {
+        console.log(userData.Password)
+        console.log(user.Password)
         comparePassword(userData.Password, user.Password)
                 .then((passwordStatus) => {
                     if (passwordStatus) {
