@@ -83,7 +83,7 @@ function onListening() {
 }
 
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: '/tmp/uploads/' });
 
 app.post('/upload', upload.single('file'), (req, res) => {
     res.send('File uploaded successfully!');
