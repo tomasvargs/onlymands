@@ -8,11 +8,36 @@ var instance = new Razorpay({
   key_id: "rzp_test_09P7EarEEyuHeq",
   key_secret: "knJhy4BRKV3dVsNBDmKOFxhq",
 });
+const crypto = require("crypto");
+
+
+// Function to hash password
+const hashPassword = (password) => {
+  return new Promise((resolve, reject) => {
+      crypto.scrypt(password, 'salt', 64, (err, derivedKey) => {
+          if (err) reject(err);
+          resolve(derivedKey.toString('hex'));
+      });
+  });
+};
+
+
+
+
+// Function to compare password
+const comparePassword = (enteredPassword, storedHash) => {
+  return new Promise((resolve, reject) => {
+      crypto.scrypt(enteredPassword, 'salt', 64, (err, derivedKey) => {
+          if (err) reject(err);
+          resolve(derivedKey.toString('hex') === storedHash);
+      });
+  });
+};
 
 module.exports = {
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
-      userData.Password = await bcrypt.hash(userData.Password, 10);
+      userData.Password = await hashPassword(userData.Password);
       db.get()
         .collection(collection.USER_COLLECTION)
         .insertOne(userData)
@@ -23,6 +48,7 @@ module.exports = {
   },
   doLogin: (userData) => {
     return new Promise(async (resolve, reject) => {
+      
       let loginStatus = false;
       let response = {};
       let user = await db
@@ -30,20 +56,22 @@ module.exports = {
         .collection(collection.USER_COLLECTION)
         .findOne({ Email: userData.Email });
       if (user) {
-        bcrypt
-          .compare(userData.Password, user.Password)
-          .then((passwordStatus) => {
-            if (passwordStatus) {
-              response.user = user;
-              response.passwordStatus = true;
-              resolve(response);
-            } else {
-              resolve({ passwordStatus: false });
-            }
-          });
+        comparePassword(userData.Password, user.Password)
+                .then((passwordStatus) => {
+                    if (passwordStatus) {
+                        response.user = user;
+                        response.passwordStatus = true;
+                        resolve(response);
+                    } else {
+                        resolve({ passwordStatus: false });
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
       } else {
         resolve({ userStatus: false });
-      }
+      }   
     });
   },
   getAllProducts: () => {

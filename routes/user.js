@@ -70,7 +70,7 @@ router.post("/signup", (req, res) => {
     req.session.user = response.user;
     req.session.userLoggedIn = true;
 
-    res.redirect("user/login");
+    res.redirect("/user/login");
   });
 });
 
