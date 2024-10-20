@@ -1,0 +1,75 @@
+{{#if noOrderStatus}}
+<div style="display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; height: 80vh;">
+
+    <h1 style="margin-bottom: 20px;">No orders yet</h1>
+    <a href="/admin" class="btn btn-success">Go to Admin</a>
+</div>
+{{else}}
+<section>
+    <div class="container">
+        <h1 style="text-align: center; margin-top:30px">ORDERS</h1>
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Pincode</th>
+                    <th scope="col">Mobile</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Payment</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.date}}</td>
+                    <td>{{this.deliveryDetails.address}}</td>
+                    <td>{{this.deliveryDetails.pincode}}</td>
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.totalAmount}}</td>
+                    <td>{{this.paymentMethod}}</td>
+                    <td>{{this.status}}</td>
+
+                    <td>
+                        <a href="/admin/view-order-products/{{this._id}}" class="btn btn-primary">View Products</a>
+
+                    </td>
+                    <td>
+                        <button id='{{this._id}}' class="btn btn-danger" onclick="deliverftn('{{this._id}}')" {{#if
+                            this.isShipped}}disabled{{/if}}>
+                            {{#if this.isShipped}}Shipped{{else}}Initiate Delivery{{/if}}
+                        </button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+{{/if}}
+<script>
+    function deliverftn(orderId) {
+        if (confirm('Confirm shipment initiation?')) {
+            $.ajax({
+                url: '/admin/change-shipment-status',
+                data: {
+                    order: orderId,
+                },
+                method: 'post',
+                success: (response) => {
+                    if (response.statusChange) {
+
+                        location.reload()
+
+                    }
+
+
+                }
+            })
+        }
+    }
+</script>

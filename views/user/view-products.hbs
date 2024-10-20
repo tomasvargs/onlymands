@@ -1,0 +1,386 @@
+<section>
+    <div class="overlay-content">
+        <h1>Welcome to a new beginning</h1>
+        <p>Your journey begins here.</p>
+    </div>
+    <section id="navigation-section" class="nav-section">
+        <ul class="nav-list">
+            <li class="nav-item" onclick="scrollToSection('tshirts')">T-Shirts</li>
+            <li class="nav-item" onclick="scrollToSection('shirts')">Shirts</li>
+            <li class="nav-item" onclick="scrollToSection('jeans')">Jeans</li>
+        </ul>
+    </section>
+    <div class="video-container">
+        <video id="backgroundVideo" autoplay loop class="background-video" onclick="toggleMute()">
+            <source src="videos/add.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+    </div>
+</section>
+
+
+<section id="tshirts">
+    <div class="container mt-5">
+        <h2>T-Shirts</h2>
+        <div class="flex-row-wrapper">
+            {{#each Tshirts}}
+            <div class="flex-item p-3">
+                <div class="product" onclick="Details('{{this._id}}')">
+                    <img src="/product-images/{{this._id}}.jpeg" alt="{{this.Name}}" class="product-img-top">
+                    <div class="product-body">
+                        <h5 class="product-title">{{this.Name}}</h5>
+                        <h6 class="product-price">MRP : ₹ {{this.Price}}</h6>
+                        <div class="button-container">
+                            <button onclick="event.stopPropagation(); addToCart('{{this._id}}')"
+                                class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<section id="shirts">
+    <div class="container mt-5">
+        <h2>Shirts</h2>
+        <div class="flex-row-wrapper">
+            {{#each Shirts}}
+            <div class="flex-item p-3">
+                <div class="product" onclick="Details('{{this._id}}')">
+                    <img src="/product-images/{{this._id}}.jpeg" alt="{{this.Name}}" class="product-img-top">
+                    <div class="product-body">
+                        <h5 class="product-title">{{this.Name}}</h5>
+                        <h6 class="product-price">MRP : ₹ {{this.Price}}</h6>
+                        <div class="button-container">
+                            <button onclick="event.stopPropagation(); addToCart('{{this._id}}')"
+                                class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<section id="jeans">
+    <div class="container mt-5">
+        <h2>Jeans</h2>
+        <div class="flex-row-wrapper">
+            {{#each Jeans}}
+            <div class="flex-item p-3">
+                <div class="product" onclick="Details('{{this._id}}')">
+                    <img src="/product-images/{{this._id}}.jpeg" alt="{{this.Name}}" class="product-img-top">
+                    <div class="product-body">
+                        <h5 class="product-title">{{this.Name}}</h5>
+                        <h6 class="product-price">MRP : ₹ {{this.Price}}</h6>
+
+                        <div class="button-container">
+                            <button onclick="event.stopPropagation(); addToCart('{{this._id}}')"
+                                class="btn btn-primary">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</section>
+
+<style>
+    .video-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        top: 150px;
+        left: 50%;
+        width: 89%;
+        height: calc(100vh- 120px);
+        overflow: hidden;
+        transform: translateX(-50%);
+        margin-top: 70px;
+        margin-bottom: 50px;
+        border-radius: 6px;
+        z-index: 1;
+    }
+
+
+    .background-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .overlay-content {
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        color: rgb(0, 0, 0);
+        text-align: center;
+        padding: 20px;
+        z-index: 2;
+    }
+
+    .nav-section {
+        position: absolute;
+        top: 140px;
+        width: 90%;
+        /* Ensures the width is 90% of the parent */
+        left: 50%;
+        /* Centers the left edge */
+        transform: translateX(-50%);
+        /* Adjusts for perfect centering */
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        /*background-color: #000000;
+    border-bottom: 2px solid #ff0000;*/
+        z-index: 1;
+
+    }
+
+    .nav-item {
+        display: inline-flex;
+        list-style: none;
+        cursor: pointer;
+        padding: 20px;
+        font-size: 1rem;
+        color: rgb(0, 0, 0);
+        border-radius: 5px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    .nav-item:hover {
+        text-decoration: underline;
+        transform: scale(1.5);
+        /* Slightly enlarges the product */
+
+    }
+
+    h1 {
+        font-size: 3rem;
+    }
+
+    p {
+        font-size: 1.5rem;
+    }
+
+    .play-button {
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        font-size: 1.5rem;
+        background-color: #000000;
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        z-index: 1;
+        /* Ensure it's above other content */
+    }
+
+    .play-button:hover {
+        background-color: #282d33;
+    }
+
+
+
+
+
+    .flex-row-wrapper {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        scroll-behavior: smooth;
+        /* Smooth scrolling */
+        gap: 10px;
+        /* Space between items */
+    }
+
+    .flex-item {
+        flex: 0 0 calc(33.33% - 10px);
+        /* Ensure 3 items fit per row, with spacing */
+    }
+
+    .product {
+        text-align: center;
+        /* Center text in the product div */
+        padding: 10px;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .product:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: scale(1.05);
+        /* Slightly enlarges the product */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        /* Adds a smooth transition for both scaling and shadow effects */
+    }
+
+
+    .product-img-top {
+        width: 100%;
+        height: 100%;
+        /* Fixed height to ensure equal resolution */
+        object-fit: cover;
+        /* Ensures image covers the given area without distortion */
+        border-radius: 8px;
+    }
+
+    .product-body {
+        padding: 15px 0;
+    }
+
+    .button-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background-color: #000000;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #232425;
+    }
+
+    /* Minimalistic scrollbar for WebKit-based browsers */
+    .flex-row-wrapper::-webkit-scrollbar {
+        height: 6px;
+        /* Adjust the height of the scrollbar */
+    }
+
+    .flex-row-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        /* Color of the scrollbar track */
+    }
+
+    .flex-row-wrapper::-webkit-scrollbar-thumb {
+        background: #888;
+        /* Color of the scrollbar thumb */
+        border-radius: 3px;
+        /* Rounded corners for the scrollbar thumb */
+    }
+
+    .flex-row-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        /* Darker color on hover */
+    }
+
+    /* Minimalistic scrollbar for Firefox */
+    .flex-row-wrapper {
+        scrollbar-width: thin;
+        /* Firefox: thin scrollbar */
+        scrollbar-color: #888 #f1f1f1;
+        /* Firefox: thumb and track colors */
+    }
+
+
+    /* Media query for smaller screens */
+    @media screen and (max-width: 1227px) {
+        .overlay-content {
+
+            p {
+                display: none;
+            }
+
+            /* Adjust font size for tablets and smaller devices */
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+
+        .play-button {
+            top: 55%;
+        }
+    }
+
+    @media screen and (max-width: 650px) {
+        .overlay-content {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                display: block;
+                font-size: 1rem;
+            }
+
+            /* Adjust font size for tablets and smaller devices */
+        }
+
+    }
+
+    /* Media query for even smaller screens */
+</style>
+
+<script>
+    function Details(proId) {
+        window.location.href = `/user/go-to-product/${proId}`
+    }
+
+    let manuallyMuted = false;
+    function toggleMute() {
+        const video = document.getElementById('backgroundVideo');
+        manuallyMuted = !video.muted; // Toggle manual mute state
+        video.muted = !video.muted;
+    }
+
+    document.addEventListener('scroll', function () {
+        if (manuallyMuted) return; // Skip if manually muted/unmuted
+
+        const video = document.getElementById('backgroundVideo');
+        const rect = video.getBoundingClientRect();
+
+        // Check if the video is out of view
+        if (rect.bottom < 0 || rect.top > window.innerHeight) {
+            video.muted = true; // Mute the video
+            video.pause(); // Pause the video
+        } else {
+            video.muted = false; // Unmute the video
+            video.play(); // Play the video
+        }
+    });
+    // Ensure video plays on load
+    window.addEventListener('load', function () {
+        const video = document.getElementById('backgroundVideo');
+        video.play().catch((error) => {
+            console.log('Autoplay prevented:', error);
+            // If autoplay is prevented, show a play button
+            const playButton = document.createElement('button');
+            playButton.textContent = 'Play Video';
+            playButton.className = 'play-button';
+            document.body.appendChild(playButton);
+
+            playButton.addEventListener('click', function () {
+                video.play();
+                playButton.style.display = 'none';
+            });
+        });
+    });
+    function scrollToSection(sectionId) {
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+
+
+</script>

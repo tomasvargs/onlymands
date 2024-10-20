@@ -1,0 +1,44 @@
+<section id="product-details">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <img src="/product-images/{{product._id}}.jpeg" alt="{{product.Name}}" class="img-fluid" style="width: 100%; height: auto;">
+            </div>
+            <div class="col-md-5 d-flex flex-column justify-content-center">
+                <h5>{{product.Name}}</h5>
+                <h6 class="text-muted">{{product.Category}}</h6>
+                <h6>MRP : ₹ {{product.Price}}</h6>
+                <p>{{product.Description}}</p>
+                <button onclick="addToCart('{{product._id}}')" class="btn btn-primary">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+#product-details .container {
+    max-width: 1200px; /* Adjust as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.col-md-5 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.col-md-5 + .col-md-5 {
+    padding-left: 40px;
+}
+
+.btn {
+    margin-top: 20px;
+}
+</style>

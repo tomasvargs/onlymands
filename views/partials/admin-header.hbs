@@ -1,0 +1,203 @@
+<header>
+  <div class="container">
+    <div id="branding">
+      <h1><span class="highlight">SHOP</span> MART</h1>
+    </div>
+
+    <nav>
+      <ul>
+        <li>
+          <a href="/admin">Products</a>
+        </li>
+        <li>
+          <a href="/admin/all-orders">Orders
+          </a>
+        </li>
+        <li>
+          <a href="/admin/all-users">Users</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="dropdown">
+      <button class="dropdown-btn" id="dropdownMenuButton">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/800px-Hamburger_icon.svg.png"
+          alt="">
+      </button>
+      <ul class="dropdown-menu" id="dropdown-menu">
+        {{#if admin}}
+        Admin : Thoma
+        <hr>
+        <li><a href="/admin/logout">Logout</a></li>
+        {{else}}
+        <h6>Admin</h6>
+        <h6>To access account</h6>
+        <hr>
+        <li><a href="/admin">Login/Signup</a></li>
+        {{/if}}
+      </ul>
+
+
+    </div>
+
+
+  </div>
+
+</header>
+
+<style>
+  header {
+    background: #ffffff;
+    color: #f8f800;
+    top: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: rgb(0, 0, 0) 3px solid;
+    z-index: 1;
+    /* Ensures the header is properly layered */
+    position: fixed;
+    /* Makes sure the header is positioned in flow of the document */
+    width: 90%;
+    /* Ensure full width for the header */
+    display: flex;
+    /* Enable flexbox for the header */
+    justify-content: center;
+    /* Center the items horizontally */
+    align-items: center;
+    /* Center the items vertically */
+    left: 50%;
+    /* Center the header */
+    transform: translateX(-50%);
+
+  }
+
+  .container {
+    width: 100%;
+    margin: auto;
+  }
+
+  header ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+  }
+
+  header #branding {
+    float: left;
+  }
+
+  header #branding h1 {
+    margin: 0
+  }
+
+  header nav {
+    position: relative;
+    margin-top: 13px;
+    float: left;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-size: large;
+  }
+
+  header .highlight,
+  header .current a {
+    color: rgb(0, 0, 0);
+
+
+  }
+
+  header a:hover {
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+
+  /* Dropdown menu styles */
+  .dropdown {
+    float: right;
+    position: relative;
+    /* Ensures the dropdown-menu is positioned relative to this container */
+    z-index: 2;
+  }
+
+  /* Dropdown button styles */
+  /* Show dropdown menu when hovered */
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-btn {
+    background-color: transparent;
+    border: 1px solid #000000;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+    width: 40px;
+    height: 40px;
+  }
+
+  .dropdown-btn img {
+    width: 100%;
+    /* Make the image fill the button */
+    height: auto;
+  }
+
+
+  .dropdown-menu {
+    display: none;
+    right: 100%;
+    /* Align the dropdown to the right side of the button */
+    transform: translateX(-50px);
+    /* Slight offset for spacing */
+    top: 100%
+      /* Position it just below the button */
+      background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    min-width: 170px;
+  }
+
+
+
+  .dropdown-menu li a {
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    width: 100%;
+  }
+
+
+  /* Show the dropdown on button click */
+  .dropdown.hover .dropdown-menu {
+    display: block;
+  }
+
+  section {
+    background-color: rgb(255, 255, 255);
+    margin-top: 100px;
+  }
+
+  a:hover {
+    background-color: transparent;
+    border: 2px solid rgb(0, 0, 0);
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 5px;
+    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+  }
+</style>

@@ -1,0 +1,112 @@
+<section 
+    style="width: 80%; margin: 170px auto; padding: 20px; background-color: lightgray; border-radius: 10px; display: flex;">
+    <form action="" id="checkout-form" style="width: 100%; display: flex; justify-content: space-between;">
+
+        <div class="container" style="width: 45%;" >
+            <h3>Enter Delivery Details</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Address</label>
+                <input type="text" class="form-control" name="Address" placeholder="Enter address"
+                    style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Pincode</label>
+                <input type="text" class="form-control" name="Pincode" placeholder="Enter pincode"
+                    style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>Mobile</label>
+                <input type="text" class="form-control" name="Mobile" placeholder="Enter mobile"
+                    style="width: 100%; padding: 10px; margin-top: 5px;">
+            </div>
+            <div class="form-group">
+                <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+            </div>
+        </div>
+
+        <div class="container" style="width: 45%; margin-top:100px" >
+            <h5>Total Amount:</h5>
+            <span>Rs.{{total}}</span>
+            <h6>Payment Method</h6>
+            <label class="radio">
+                <input type="radio" name="payment-method" value="COD" checked> COD
+            </label>
+            <br>
+            <label class="radio mt-2">
+                <input type="radio" name="payment-method" value="Online" checked>Online Payment
+            </label>
+            <button class="btn btn-success float-right ">Checkout</button>
+        </div>
+
+    </form>
+</section>
+
+<script>
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: '/user/place-order',
+            method: 'post',
+            data: $('#checkout-form').serialize(),
+            success: (response) => {
+                alert(response)
+                if (response.codSuccess) {
+                    location.href = '/user/order-success'
+                } else {
+                    razorpayPayment(response)
+                }
+            }
+        })
+    })
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_09P7EarEEyuHeq", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Thoma", //your business name
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature);
+
+                verifyPayment(response, order)
+            },
+
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/user/verify-payment',
+            data: {
+                payment,
+                order
+            },
+            method: 'post',
+            success: (response) => {
+                if (response.status) {
+                    location.href = '/user/order-success'
+                } else {
+                    alert("payment failed")
+                }
+            }
+
+        })
+    }
+</script>

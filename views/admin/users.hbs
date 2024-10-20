@@ -1,0 +1,38 @@
+{{#if noUserStatus}}
+<div style="display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; height: 80vh;">
+
+    <h1 style="margin-bottom: 20px;">No Users yet</h1>
+    <a href="/admin" class="btn btn-success">Go to Admin</a>
+</div>
+{{else}}
+<section>
+    <div class="container">
+        <h1 style="text-align: center; margin-top:30px">USERS</h1>
+        <table class="table mt-5">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Password</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+                <tr>
+                    <td>{{this.Name}}</td>
+                    <td>{{this.Email}}</td>
+                    <td>{{this.Password}}</td>
+
+
+
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+{{/if}}
