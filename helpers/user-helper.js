@@ -1,8 +1,7 @@
 var db = require("../config/connection");
 var collection = require("../config/collections");
 const bcrypt = require("bcrypt");
-const { response } = require("../app");
-const { log } = require("handlebars");
+
 var objectId = require("mongodb").ObjectId;
 const Razorpay = require("razorpay");
 var instance = new Razorpay({

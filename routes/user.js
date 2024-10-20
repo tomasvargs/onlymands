@@ -1,8 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const productHelpers = require("../helpers/product-helper");
 const userHelpers = require("../helpers/user-helper");
-const collections = require("../config/collections");
 const verifyLogin = (req, res, next) => {
   if (req.session.userLoggedIn) {
     next();
