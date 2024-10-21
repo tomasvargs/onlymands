@@ -2,11 +2,9 @@
   "name": "e-commerce",
   "version": "0.0.0",
   "private": true,
-  "engines": {
-    "node": "20.x"
-  },
+  "main": "api/app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node api/app.js"
   },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
