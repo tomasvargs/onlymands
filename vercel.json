@@ -5,11 +5,8 @@
         "maxDuration": 30
       }
     },
-    "routes": [
-      { "src": "/(.*)", "dest": "/api/app.js" }
-    ],
     "rewrites": [
-      { "source": "/(.*)", "destination": "/public/$1" }
+      { "source": "/(.*)", "destination": "/api/app.js" }
     ]
   }
   
