@@ -11,6 +11,7 @@ var app = express();
 var fileUpload = require('express-fileupload');
 var db = require('./config/connection');
 var session = require('express-session');
+const MongoStore = require('connect-mongo');
 const nocache = require('nocache');
 var http = require('http');
 var port = normalizePort(process.env.PORT || '3000');
@@ -24,14 +25,14 @@ server.on('listening', onListening);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Ensure session middleware is configured correctly
+// Session store with MongoDB
 app.use(session({
   secret: "Key",
   resave: false, // Updated for better session handling
   saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/shopping' }),
   cookie: { maxAge: 600000 }
 }));
-
 app.use(nocache());
 
 // Define normalizePort function here

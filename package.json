@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@handlebars/allow-prototype-access": "^1.0.5",
+    "connect-mongo": "^5.1.0",
     "cookie-parser": "~1.4.4",
     "datatables.net-dt": "^2.1.5",
     "debug": "~2.6.9",
