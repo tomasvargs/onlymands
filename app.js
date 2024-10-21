@@ -28,14 +28,14 @@ app.use(bodyParser.json());
 // Session store with MongoDB
 app.use(session({
   secret: "Key",
-  resave: false, // Updated for better session handling
+  resave: false, // Better session handling
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/shopping' }),
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/shopping' }),
   cookie: { maxAge: 600000 }
 }));
 app.use(nocache());
 
-// Define normalizePort function here
+// Define normalizePort function
 function normalizePort(val) {
   var port = parseInt(val, 10);
   if (isNaN(port)) { return val; } // named pipe
