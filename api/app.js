@@ -4,22 +4,22 @@ var path = require('path');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var userRouter = require('../routes/user');
-var adminRouter = require('../routes/admin');
+var userRouter = require('../routes/user'); // Ensure this path is correct
+var adminRouter = require('../routes/admin'); // Ensure this path is correct
 var hbs = require('express-handlebars');
 var app = express();
 var fileUpload = require('express-fileupload');
-var db = require('../config/connection');
+var db = require('../config/connection'); // Ensure this path is correct
 var session = require('express-session');
 const MongoStore = require('connect-mongo');
 const nocache = require('nocache');
 var http = require('http');
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
-
 
 var server = http.createServer(app);
 server.listen(port);
@@ -93,15 +93,14 @@ app.engine('hbs', hbs.engine({
   defaultLayout: 'layout',
   layoutsDir: path.join(__dirname, '../views/layout/'), // Updated path
   partialsDir: path.join(__dirname, '../views/partials/') // Updated path
-
 }));
 app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, '../views')); 
+app.set('views', path.join(__dirname, '../views')); // Updated path
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public'))); // Updated path
 app.use(fileUpload());
 
 db.connect((err) => {
