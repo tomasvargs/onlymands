@@ -87,8 +87,12 @@ router.get("/all-users", verifyLogin, async (req, res) => {
 });
 
 router.post("/add-product", (req, res) => {
+  if (!req.files || !req.files.Image) {
+    return res.status(400).send("No image file uploaded.");
+}
   adminHelpers.addproduct(req.body, (id) => {
     let image = req.files.Image;
+    console.log('product entry')
     image.mv("./public/product-images/" + id + ".jpeg", (err) => {
       if (!err) {
         res.redirect("/admin");

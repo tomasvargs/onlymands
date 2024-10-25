@@ -1,53 +1,97 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-const bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var userRouter = require('../routes/user'); // Ensure this path is correct
-var adminRouter = require('../routes/admin'); // Ensure this path is correct
-var hbs = require('express-handlebars');
-var app = express();
-var fileUpload = require('express-fileupload');
-var db = require('../config/connection'); // Ensure this path is correct
-var session = require('express-session');
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const path = require('path');
+const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const hbs = require('express-handlebars');
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
+const db = require('../config/connection');
+const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const nocache = require('nocache');
-var http = require('http');
-var port = normalizePort(process.env.PORT || '3000');
+const http = require('http');
+const multer = require('multer');
+const upload = multer({ dest: '/tmp/uploads/' });
+
+const userRouter = require('../routes/user');
+const adminRouter = require('../routes/admin');
+
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
+// Health check route
+app.get('/health', (req, res) => res.status(200).send('OK'));
 
-var server = http.createServer(app);
-server.listen(port);
+// Create HTTP server
+const server = http.createServer(app);
 server.on('error', onError);
 server.on('listening', onListening);
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// Middleware setup
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '../public')));
+app.use(nocache());
+ db.connect();
+console.log("Connected to MongoDB");
 
-// Session store with MongoDB
+// Set up session middleware
 app.use(session({
   secret: "Key",
-  resave: false, // Better session handling
+  resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/shopping' }),
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
   cookie: { maxAge: 600000 }
 }));
-app.use(nocache());
 
-// Define normalizePort function
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-  if (isNaN(port)) { return val; } // named pipe
-  if (port >= 0) { return port; } // port number
-  return false;
-}
 
-// Route for displaying the welcome form
+server.listen(port, () => console.log(`Server is running on http://localhost:${port}`));
+
+// View engine setup
+app.engine('hbs', hbs.engine({
+  extname: 'hbs',
+  defaultLayout: 'layout',
+  layoutsDir: path.join(__dirname, '../views/layout/'),
+  partialsDir: path.join(__dirname, '../views/partials/')
+}));
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, '../views'));
+
+// File upload setup
+
+
+// Initialize MongoDB connection and session store
+// (async () => {
+//   try {
+//     await db.connect();
+//     console.log("Connected to MongoDB");
+
+//     // Set up session middleware
+//     app.use(session({
+//       secret: "Key",
+//       resave: false,
+//       saveUninitialized: true,
+//       store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
+//       cookie: { maxAge: 600000 }
+//     }));
+
+    
+//     server.listen(port, () => console.log(`Server is running on http://localhost:${port}`));
+//   } catch (error) {
+//     console.error("Database Connection Error:", error);
+//   }
+// })();
+// Route setup after session middleware
+app.use('/user', userRouter);
+app.use('/admin', adminRouter);
+
+// Routes for user selection between admin and user
 app.get('/', (req, res) => {
   res.send(`
     <h1>Welcome!</h1>
@@ -62,10 +106,10 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Route for handling the form submission
 app.post('/route', (req, res) => {
   const role = req.body.role;
   if (role === 'user') {
+    console.log('user')
     res.redirect('/user');
   } else if (role === 'admin') {
     res.redirect('/admin');
@@ -74,75 +118,49 @@ app.post('/route', (req, res) => {
   }
 });
 
-// User route
-app.use('/user', userRouter);
+// File upload route
 
-// Admin route
-app.use('/admin', adminRouter);
-
-// Upload route
-const multer = require('multer');
-const upload = multer({ dest: '/tmp/uploads/' });
-app.post('/upload', upload.single('file'), (req, res) => {
-  res.send('File uploaded successfully!');
-});
-
-// View engine setup
-app.engine('hbs', hbs.engine({
-  extname: 'hbs',
-  defaultLayout: 'layout',
-  layoutsDir: path.join(__dirname, '../views/layout/'), // Updated path
-  partialsDir: path.join(__dirname, '../views/partials/') // Updated path
-}));
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, '../views')); // Updated path
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../public'))); // Updated path
-app.use(fileUpload());
-
-db.connect((err) => {
-  if (err) console.log("Database Connection Error" + err);
-  else console.log("Database Connected");
-});
 
 // Catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`); // Log the not found URL
   next(createError(404));
 });
 
 // Error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
   res.status(err.status || 500);
   res.render('error');
 });
 
-app.use(express.static('public'));
+// Port normalization function
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+  return isNaN(port) ? val : port >= 0 ? port : false;
+}
 
-module.exports = app;
-
-/**
- * Event listener for HTTP server "error" event.
- */
+// Event listeners
 function onError(error) {
-  if (error.syscall !== 'listen') { throw error; }
-  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+  if (error.syscall !== 'listen') throw error;
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
   switch (error.code) {
-    case 'EACCES': console.error(bind + ' requires elevated privileges'); process.exit(1); break;
-    case 'EADDRINUSE': console.error(bind + ' is already in use'); process.exit(1); break;
-    default: throw error;
+    case 'EACCES':
+      console.error(`${bind} requires elevated privileges`);
+      process.exit(1);
+    case 'EADDRINUSE':
+      console.error(`${bind} is already in use`);
+      process.exit(1);
+    default:
+      throw error;
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  const addr = server.address();
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   console.log('Listening on ' + bind);
 }
+
+module.exports = app;

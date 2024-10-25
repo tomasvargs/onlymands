@@ -1,21 +1,28 @@
-require('dotenv').config(); // Add this line at the top
-
-const { MongoClient } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const state = { db: null };
 
-module.exports.connect = async function(done) {
+module.exports.connect = async function() {
     const url = process.env.MONGO_URL;
     const dbname = 'shopping';
+
     try {
-        if (!url || !url.startsWith('mongodb://')) {
-            throw new Error('MONGO_URL is not set or is invalid');
+        if (!url) {
+            throw new Error('MONGO_URL is not set');
         }
-        const client = new MongoClient(url);
+
+        const client = new MongoClient(url, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+
         await client.connect();
         state.db = client.db(dbname);
-        done();
     } catch (err) {
-        done(err);
+        console.error('Database connection failed', err);
+        throw err; // rethrow the error to be handled elsewhere
     }
 };
 
