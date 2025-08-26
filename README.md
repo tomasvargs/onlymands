@@ -1,6 +1,6 @@
 # 🛍️ Onlymands — A Modern JavaScript-Based E-Commerce Platform
 
-onlymands is a sample e-commerce web application built with JavaScript, offering a seamless shopping experience from user registration to secure payment via Razorpay.
+Onlymands is a sample e-commerce web application built with JavaScript, offering a seamless shopping experience from user registration to secure payment via Razorpay.
 ---
 
 ## 🚀 Features
@@ -33,8 +33,7 @@ onlymands is a sample e-commerce web application built with JavaScript, offering
 |--------------|---------------------------|
 | Frontend     | HTML, CSS, JavaScript     |
 | Backend      | Node.js, Express.js       |
-| Database     | MongoDB (via Mongoose)    |
-| Auth         | JWT, bcrypt               |
+| Database     | MongoDB Atlas             |
 | Payment      | Razorpay API              |
 | Deployment   | Render / Vercel / Heroku  |
 
@@ -45,14 +44,19 @@ onlymands is a sample e-commerce web application built with JavaScript, offering
 ```bash
 # Clone the repository
 git clone https://github.com/tomasvargs/onlymands.git
-cd jscommerce
+cd onlymands
 
 # Install dependencies
 npm install
 
 # Set up environment variables
 cp .env.example .env
-# Add your MongoDB URI, JWT secret, and Razorpay keys
+# Add your MongoDB URI
 
 # Start the server
 npm start
+
+# Visit the site
+http://localhost:3000/
+```
+![Home Page](images/homepage.png?raw=true "Screen Shot")
